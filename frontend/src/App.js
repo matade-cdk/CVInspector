@@ -111,22 +111,44 @@ function App() {
     return 'Needs Improvement';
   };
 
-  const feedbackSummary = results?.feedback?.find((item) => item.startsWith('SUMMARY: '));
-  const feedbackSummaryText = feedbackSummary
-    ? feedbackSummary.replace('SUMMARY: ', '')
-    : '';
+  const parseFeedbackItem = (item) => {
+    const trimmed = item.trim();
 
-  const rightItems = results?.feedback
-    ? results.feedback
-        .filter((item) => item.startsWith('RIGHT: '))
-        .map((item) => item.replace('RIGHT: ', ''))
-    : [];
+    if (trimmed.startsWith('SUMMARY: ')) {
+      return { type: 'summary', text: trimmed.replace('SUMMARY: ', '') };
+    }
 
-  const wrongItems = results?.feedback
-    ? results.feedback
-        .filter((item) => item.startsWith('WRONG: '))
-        .map((item) => item.replace('WRONG: ', ''))
-    : [];
+    if (trimmed.startsWith('RIGHT: ')) {
+      return { type: 'right', text: trimmed.replace('RIGHT: ', '') };
+    }
+
+    if (trimmed.startsWith('WRONG: ')) {
+      return { type: 'wrong', text: trimmed.replace('WRONG: ', '') };
+    }
+
+    if (trimmed.startsWith('✅')) {
+      return { type: 'right', text: trimmed.replace(/^✅\s*/, '') };
+    }
+
+    if (trimmed.startsWith('❌') || trimmed.startsWith('⚠️')) {
+      return { type: 'wrong', text: trimmed.replace(/^(❌|⚠️)\s*/, '') };
+    }
+
+    return { type: 'wrong', text: trimmed };
+  };
+
+  const feedbackItems = results?.feedback ? results.feedback.map(parseFeedbackItem) : [];
+
+  const feedbackSummary = feedbackItems.find((item) => item.type === 'summary');
+  const feedbackSummaryText = feedbackSummary ? feedbackSummary.text : '';
+
+  const rightItems = feedbackItems
+    .filter((item) => item.type === 'right')
+    .map((item) => item.text);
+
+  const wrongItems = feedbackItems
+    .filter((item) => item.type === 'wrong')
+    .map((item) => item.text);
 
   return (
     <div className="App">
