@@ -68,7 +68,7 @@ function calculateATSScore(resumeText, jobDetails) {
   const text = resumeText.toLowerCase();
   let score = 0;
   const feedback = [];
-  const maxScore = 100;
+  const maxScore = 110;
 
   // 1. Check for contact information (20 points total: 10 email + 10 GitHub)
   const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
@@ -118,10 +118,8 @@ function calculateATSScore(resumeText, jobDetails) {
   const keywordScore = Math.min(30, (keywordCount / relevantKeywords.length) * 30);
   score += keywordScore;
   
-  if (keywordScore < 15) {
+  if (keywordCount === 0) {
     feedback.push(`WRONG: Add more relevant technical skills for ${jobDetails.jobRole} position (found ${keywordCount}/${relevantKeywords.length})`);
-  } else if (keywordScore < 25) {
-    feedback.push(`WRONG: Include more skills related to ${jobDetails.jobRole} (found ${keywordCount}/${relevantKeywords.length})`);
   } else {
     feedback.push(`RIGHT: Excellent skillset match for ${jobDetails.jobRole} (found ${keywordCount}/${relevantKeywords.length} skills)`);
   }
@@ -166,15 +164,15 @@ function calculateATSScore(resumeText, jobDetails) {
   
   if (hasEducationSection && hasRequiredDegree) {
     score += 20;
-    feedback.push('RIGHT: Required education qualification found (BCA/BE/BTech)');
+    // feedback.push('RIGHT: Required education qualification found (BCA/BE/BTech)');
   } else if (hasEducationSection) {
     score += 10;
-    feedback.push('WRONG: Education section found but missing BCA/BE/BTech degree');
+    // feedback.push('WRONG: Education section found but missing BCA/BE/BTech degree');
   } else if (hasRequiredDegree) {
     score += 15;
-    feedback.push('WRONG: Required degree found, but add a clear Education section heading');
+    // feedback.push('WRONG: Required degree found, but add a clear Education section heading');
   } else {
-    feedback.push('WRONG: Add Education section with BCA/BE/BTech degree');
+    // feedback.push('WRONG: Add Education section with BCA/BE/BTech degree');
   }
 
   // 5. Check for dedicated skills section (5 points)
@@ -225,12 +223,37 @@ function calculateATSScore(resumeText, jobDetails) {
     feedback.push('WRONG: Use more action verbs (developed, managed, led, created, etc.)');
   }
 
+  // 9. Check for certifications (5 points)
+  const certificationKeywords = ['certification', 'certified', 'certificate', 'certification:', 'certifications:'];
+  const commonCerts = ['aws', 'azure', 'google cloud', 'gcp', 'oracle', 'cisco', 'comptia', 'pmp', 'scrum master', 'csm', 'microsoft', 'java certified', 'python certified', 'ccna', 'ccnp', 'kubernetes', 'ckad', 'cka'];
+  
+  let hasCertificationSection = certificationKeywords.some(keyword => text.includes(keyword));
+  let hasRecognizedCert = commonCerts.some(cert => text.includes(cert));
+  
+  if (hasCertificationSection || hasRecognizedCert) {
+    score += 5;
+    feedback.push('RIGHT: Certifications found - adds credibility');
+  } else {
+    feedback.push('WRONG: Add relevant certifications (AWS, Azure, Scrum, etc.) if you have any');
+  }
+
+  // 10. Check for hobbies/interests section (5 points)
+  const hobbiesKeywords = ['hobbies', 'interests', 'hobbies:', 'interests:', 'personal interests', 'hobbies and interests'];
+  let hasHobbies = hobbiesKeywords.some(keyword => text.includes(keyword));
+  
+  if (hasHobbies) {
+    score += 5;
+    feedback.push('RIGHT: Hobbies/Interests section found - shows personality');
+  } else {
+    feedback.push('WRONG: Consider adding a Hobbies/Interests section to show personality');
+  }
+
   // Additional feedback based on score
-  if (score >= 90) {
+  if (score >= 99) {
     feedback.unshift('SUMMARY: EXCELLENT - Your resume meets all requirements and is highly optimized');
-  } else if (score >= 75) {
+  } else if (score >= 83) {
     feedback.unshift('SUMMARY: GOOD - Resume with required qualifications, minor improvements suggested');
-  } else if (score >= 60) {
+  } else if (score >= 66) {
     feedback.unshift('SUMMARY: FAIR - Resume needs improvements, check education and skillset requirements');
   } else {
     feedback.unshift('SUMMARY: NEEDS WORK - Major improvements needed, missing critical requirements');
@@ -248,6 +271,19 @@ app.post('/api/analyze-resume', upload.single('resume'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    // Check for professional file name (no digits allowed)
+    const fileName = req.file.originalname;
+    const fileNameWithoutExt = path.parse(fileName).name;
+    const hasDigits = /\d/.test(fileNameWithoutExt);
+    
+    if (hasDigits) {
+      fs.unlinkSync(req.file.path); // Clean up
+      return res.status(400).json({ 
+        error: 'Unprofessional file name detected',
+        message: 'Resume file name should not contain digits. Use format like "JohnDoe_Resume.pdf" or "FirstName_LastName_Resume.pdf"'
+      });
     }
 
     const jobDetails = JSON.parse(req.body.jobDetails);

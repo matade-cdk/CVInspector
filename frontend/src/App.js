@@ -79,7 +79,8 @@ function App() {
       setResults(response.data);
       setStep(3);
     } catch (err) {
-      setError(err.response?.data?.error || 'Error analyzing resume. Please try again.');
+      const errorMsg = err.response?.data?.message || err.response?.data?.error || 'Error analyzing resume. Please try again.';
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
