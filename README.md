@@ -1,4 +1,4 @@
-# ATS Resume Checker
+# CVInspector
 
 A stunning full-stack web application with a purple/pink gradient glassmorphism UI that analyzes resumes and provides ATS (Applicant Tracking System) scores with detailed feedback to help job seekers improve their resumes.
 

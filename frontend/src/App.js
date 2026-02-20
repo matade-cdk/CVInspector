@@ -2,6 +2,14 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './App.css';
 
+// Import logo - Place your logo.png file in src/asset/ folder
+let logo;
+try {
+  logo = require('./asset/logo.png');
+} catch (e) {
+  logo = null;
+}
+
 function App() {
   const [step, setStep] = useState(1);
   const [jobDetails, setJobDetails] = useState({
@@ -103,11 +111,33 @@ function App() {
     return 'Needs Improvement';
   };
 
+  const feedbackSummary = results?.feedback?.find((item) => item.startsWith('SUMMARY: '));
+  const feedbackSummaryText = feedbackSummary
+    ? feedbackSummary.replace('SUMMARY: ', '')
+    : '';
+
+  const rightItems = results?.feedback
+    ? results.feedback
+        .filter((item) => item.startsWith('RIGHT: '))
+        .map((item) => item.replace('RIGHT: ', ''))
+    : [];
+
+  const wrongItems = results?.feedback
+    ? results.feedback
+        .filter((item) => item.startsWith('WRONG: '))
+        .map((item) => item.replace('WRONG: ', ''))
+    : [];
+
   return (
     <div className="App">
       <div className="container">
         <header className="header">
-          <h1>ATS Resume Checker</h1>
+          <div className="header-title">
+            <h1>CVInspector</h1>
+            {logo && (
+              <img src={logo} alt="CVInspector Logo" className="logo header-logo" />
+            )}
+          </div>
           <p>Analyze your resume and get instant feedback to improve your chances</p>
         </header>
 
@@ -239,10 +269,10 @@ function App() {
             <div className="spinner"></div>
             <h2>Analyzing Your Resume...</h2>
             <p className="loading-text">
-              [*] Extracting text from document<br />
-              [*] Checking ATS compatibility<br />
-              [*] Analyzing keywords and format<br />
-              [*] Generating feedback...
+              Extracting text from document<br />
+              Checking ATS compatibility<br />
+              Analyzing keywords and format<br />
+              Generating feedback...
             </p>
           </div>
         )}
@@ -272,13 +302,39 @@ function App() {
 
             <div className="feedback-section">
               <h3>Detailed Feedback</h3>
-              <ul className="feedback-list">
-                {results.feedback.map((item, index) => (
-                  <li key={index} className="feedback-item">
-                    {item}
-                  </li>
-                ))}
-              </ul>
+              {feedbackSummaryText && (
+                <p className="feedback-summary">{feedbackSummaryText}</p>
+              )}
+              <div className="feedback-columns">
+                <div className="feedback-column">
+                  <h4 className="feedback-title">Right</h4>
+                  <ul className="feedback-list">
+                    {rightItems.length > 0 ? (
+                      rightItems.map((item, index) => (
+                        <li key={`right-${index}`} className="feedback-item">
+                          {item}
+                        </li>
+                      ))
+                    ) : (
+                      <li className="feedback-item">No items</li>
+                    )}
+                  </ul>
+                </div>
+                <div className="feedback-column">
+                  <h4 className="feedback-title">Wrong</h4>
+                  <ul className="feedback-list">
+                    {wrongItems.length > 0 ? (
+                      wrongItems.map((item, index) => (
+                        <li key={`wrong-${index}`} className="feedback-item">
+                          {item}
+                        </li>
+                      ))
+                    ) : (
+                      <li className="feedback-item">No items</li>
+                    )}
+                  </ul>
+                </div>
+              </div>
             </div>
 
             <div className="recommendations-section">

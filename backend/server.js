@@ -76,16 +76,16 @@ function calculateATSScore(resumeText, jobDetails) {
   
   if (emailRegex.test(text)) {
     score += 10;
-    feedback.push('[+] Professional email address found');
+    feedback.push('RIGHT: Professional email address found');
   } else {
-    feedback.push('[x] Add a professional email address');
+    feedback.push('WRONG: Add a professional email address');
   }
   
   if (githubRegex.test(text)) {
     score += 10;
-    feedback.push('[+] GitHub account/profile found');
+    feedback.push('RIGHT: GitHub account/profile found');
   } else {
-    feedback.push('[x] Include your GitHub profile link');
+    feedback.push('WRONG: Include your GitHub profile link');
   }
 
   // 2. Check for relevant skillset based on job role (30 points)
@@ -119,11 +119,11 @@ function calculateATSScore(resumeText, jobDetails) {
   score += keywordScore;
   
   if (keywordScore < 15) {
-    feedback.push(`[x] Add more relevant technical skills for ${jobDetails.jobRole} position (found ${keywordCount}/${relevantKeywords.length})`);
+    feedback.push(`WRONG: Add more relevant technical skills for ${jobDetails.jobRole} position (found ${keywordCount}/${relevantKeywords.length})`);
   } else if (keywordScore < 25) {
-    feedback.push(`[!] Include more skills related to ${jobDetails.jobRole} (found ${keywordCount}/${relevantKeywords.length})`);
+    feedback.push(`WRONG: Include more skills related to ${jobDetails.jobRole} (found ${keywordCount}/${relevantKeywords.length})`);
   } else {
-    feedback.push(`[+] Excellent skillset match for ${jobDetails.jobRole} (found ${keywordCount}/${relevantKeywords.length} skills)`);
+    feedback.push(`RIGHT: Excellent skillset match for ${jobDetails.jobRole} (found ${keywordCount}/${relevantKeywords.length} skills)`);
   }
 
   // 3. Check for relevant domain experience (25 points)
@@ -146,13 +146,13 @@ function calculateATSScore(resumeText, jobDetails) {
     
     if (relevantExperience) {
       score += 10;
-      feedback.push(`[+] Relevant experience found for ${jobDetails.jobRole} domain`);
+      feedback.push(`RIGHT: Relevant experience found for ${jobDetails.jobRole} domain`);
     } else {
       score += 5;
-      feedback.push(`[!] Add more specific experience related to ${jobDetails.jobRole}`);
+      feedback.push(`WRONG: Add more specific experience related to ${jobDetails.jobRole}`);
     }
   } else {
-    feedback.push('[x] Add a clear Experience/Work History section with domain-specific roles');
+    feedback.push('WRONG: Add a clear Experience/Work History section with domain-specific roles');
   }
 
   // 4. Check for required education (BCA, BE, BTech) (20 points)
@@ -166,15 +166,15 @@ function calculateATSScore(resumeText, jobDetails) {
   
   if (hasEducationSection && hasRequiredDegree) {
     score += 20;
-    feedback.push('[+] Required education qualification found (BCA/BE/BTech)');
+    feedback.push('RIGHT: Required education qualification found (BCA/BE/BTech)');
   } else if (hasEducationSection) {
     score += 10;
-    feedback.push('[!] Education section found but missing BCA/BE/BTech degree');
+    feedback.push('WRONG: Education section found but missing BCA/BE/BTech degree');
   } else if (hasRequiredDegree) {
     score += 15;
-    feedback.push('[!] Required degree found, but add a clear Education section heading');
+    feedback.push('WRONG: Required degree found, but add a clear Education section heading');
   } else {
-    feedback.push('[x] Add Education section with BCA/BE/BTech degree');
+    feedback.push('WRONG: Add Education section with BCA/BE/BTech degree');
   }
 
   // 5. Check for dedicated skills section (5 points)
@@ -183,9 +183,9 @@ function calculateATSScore(resumeText, jobDetails) {
   
   if (hasSkills) {
     score += 5;
-    feedback.push('[+] Dedicated Skills section found');
+    feedback.push('RIGHT: Dedicated Skills section found');
   } else {
-    feedback.push('[!] Add a clear "Skills" or "Technical Skills" section heading');
+    feedback.push('WRONG: Add a clear "Skills" or "Technical Skills" section heading');
   }
 
   // 6. Check for quantifiable achievements (bonus points not counted in base 100)
@@ -193,21 +193,21 @@ function calculateATSScore(resumeText, jobDetails) {
   const achievements = text.match(numberRegex);
   
   if (achievements && achievements.length >= 3) {
-    feedback.push('[+] Good use of quantifiable achievements');
+    feedback.push('RIGHT: Good use of quantifiable achievements');
   } else if (achievements && achievements.length >= 1) {
-    feedback.push('[!] Add more quantifiable achievements (numbers, percentages, metrics)');
+    feedback.push('WRONG: Add more quantifiable achievements (numbers, percentages, metrics)');
   } else {
-    feedback.push('[x] Include quantifiable achievements with numbers and metrics');
+    feedback.push('WRONG: Include quantifiable achievements with numbers and metrics');
   }
 
   // 7. Resume length check
   const wordCount = text.split(/\s+/).length;
   if (wordCount < 200) {
-    feedback.push('[x] Resume is too short - aim for 400-800 words');
+    feedback.push('WRONG: Resume is too short - aim for 400-800 words');
   } else if (wordCount > 1200) {
-    feedback.push('[!] Resume might be too long - consider condensing to 1-2 pages');
+    feedback.push('WRONG: Resume might be too long - consider condensing to 1-2 pages');
   } else {
-    feedback.push('[+] Good resume length');
+    feedback.push('RIGHT: Good resume length');
   }
 
   // 8. Check for action verbs
@@ -220,20 +220,20 @@ function calculateATSScore(resumeText, jobDetails) {
   });
   
   if (actionVerbCount >= 5) {
-    feedback.push('[+] Good use of action verbs');
+    feedback.push('RIGHT: Good use of action verbs');
   } else {
-    feedback.push('[!] Use more action verbs (developed, managed, led, created, etc.)');
+    feedback.push('WRONG: Use more action verbs (developed, managed, led, created, etc.)');
   }
 
   // Additional feedback based on score
   if (score >= 90) {
-    feedback.unshift('[EXCELLENT] Your resume meets all requirements and is highly optimized');
+    feedback.unshift('SUMMARY: EXCELLENT - Your resume meets all requirements and is highly optimized');
   } else if (score >= 75) {
-    feedback.unshift('[GOOD] Resume with required qualifications, minor improvements suggested');
+    feedback.unshift('SUMMARY: GOOD - Resume with required qualifications, minor improvements suggested');
   } else if (score >= 60) {
-    feedback.unshift('[FAIR] Resume needs improvements - check education and skillset requirements');
+    feedback.unshift('SUMMARY: FAIR - Resume needs improvements, check education and skillset requirements');
   } else {
-    feedback.unshift('[POOR] Major improvements needed - missing critical requirements');
+    feedback.unshift('SUMMARY: NEEDS WORK - Major improvements needed, missing critical requirements');
   }
 
   return {
@@ -285,7 +285,7 @@ app.post('/api/analyze-resume', upload.single('resume'), async (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.json({ message: 'Resume Checker API is running!' });
+  res.json({ message: 'CVInspector API is running!' });
 });
 
 app.listen(PORT, () => {

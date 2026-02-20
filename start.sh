@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "================================"
-echo "  ATS Resume Checker Launcher"
+echo "    CVInspector Launcher"
 echo "================================"
 echo ""
 echo "Starting Backend Server..."
