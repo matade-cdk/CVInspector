@@ -1,0 +1,39 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #0a0118;
+  background-image: 
+    radial-gradient(ellipse at 20% 50%, rgba(180, 58, 170, 0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 50%, rgba(88, 28, 135, 0.5) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(219, 39, 119, 0.3) 0%, transparent 50%);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><circle cx="100" cy="100" r="2" fill="rgba(255,255,255,0.3)"/><circle cx="300" cy="200" r="1.5" fill="rgba(255,255,255,0.2)"/><circle cx="500" cy="150" r="1" fill="rgba(255,255,255,0.4)"/><circle cx="700" cy="300" r="2" fill="rgba(255,255,255,0.3)"/><circle cx="900" cy="250" r="1.5" fill="rgba(255,255,255,0.2)"/><circle cx="200" cy="400" r="1" fill="rgba(255,255,255,0.3)"/><circle cx="600" cy="450" r="2" fill="rgba(255,255,255,0.2)"/><circle cx="800" cy="500" r="1" fill="rgba(255,255,255,0.4)"/><circle cx="150" cy="650" r="1.5" fill="rgba(255,255,255,0.3)"/><circle cx="400" cy="700" r="2" fill="rgba(255,255,255,0.2)"/><circle cx="650" cy="750" r="1" fill="rgba(255,255,255,0.3)"/><circle cx="850" cy="800" r="1.5" fill="rgba(255,255,255,0.4)"/></svg>');
+  background-size: 100% 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
