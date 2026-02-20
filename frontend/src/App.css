@@ -82,8 +82,8 @@
 }
 
 .header-logo {
-  width: 48px;
-  height: 48px;
+  width: 120px;
+  height: 120px;
 }
 
 .header h1 {
@@ -99,6 +99,48 @@
   opacity: 0.9;
   color: rgba(255, 255, 255, 0.85);
   font-weight: 300;
+}
+
+/* Progress Indicator */
+.progress-container {
+  max-width: 600px;
+  margin: 30px auto 40px;
+  text-align: center;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+  margin-bottom: 12px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ec4899, #a855f7, #8b5cf6);
+  border-radius: 20px;
+  transition: width 0.4s ease;
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.6);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.progress-text {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+  letter-spacing: 0.5px;
 }
 
 .form-container,
@@ -684,8 +726,8 @@
   }
 
   .header-logo {
-    width: 40px;
-    height: 40px;
+    width: 90px;
+    height: 90px;
   }
 
   .form-container,
@@ -740,8 +782,8 @@
   }
 
   .header-logo {
-    width: 34px;
-    height: 34px;
+    width: 72px;
+    height: 72px;
   }
 
   .form-container,

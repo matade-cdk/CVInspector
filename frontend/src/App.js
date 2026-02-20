@@ -163,6 +163,16 @@ function App() {
           <p>Analyze your resume and get instant feedback to improve your chances</p>
         </header>
 
+        {/* Progress Indicator */}
+        {step <= 2 && (
+          <div className="progress-container">
+            <div className="progress-bar">
+              <div className="progress-fill" style={{ width: `${(step / 2) * 100}%` }}></div>
+            </div>
+            <div className="progress-text">Step {step} of 2</div>
+          </div>
+        )}
+
         {/* Step 1: Job Details Form */}
         {step === 1 && (
           <div className="form-container">

@@ -17,7 +17,6 @@ A stunning full-stack web application with a purple/pink gradient glassmorphism 
 ### Contact Information (20 points)
 - Email Address (10 pts) - Required
 - GitHub Profile (10 pts) - Required
-- Phone number removed
 
 ### Skillset Match (30 points)
 - Comprehensive keyword matching based on job role
@@ -150,7 +149,6 @@ The system evaluates resumes based on:
 
 - **Contact Information** (15 points)
   - Email address
-  - Phone number
 
 - **Relevant Keywords** (25 points)
   - Job-specific technical skills
